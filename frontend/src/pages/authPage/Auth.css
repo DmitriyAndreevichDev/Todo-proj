@@ -1,0 +1,15 @@
+.Absolute-Center {
+    min-width: 400px;
+    max-width: 500px;
+    max-height: 60vh;
+    padding: 40px;
+    margin: auto;
+    position: absolute;
+    top: 0; left: 0; bottom: 0; right: 0;
+}
+
+.Auth-Block {
+    background-color: #bfe3f6;
+    border-radius: 10px;
+    box-shadow: 0px 0px 10px black;
+}

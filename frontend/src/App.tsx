@@ -1,26 +1,58 @@
-import React from 'react';
-import logo from './logo.svg';
+import React, {useEffect, useState} from 'react';
 import './App.css';
+import HeaderComponent from "./components/HeaderComponent";
+import {useDispatch, useSelector} from "react-redux";
+import Store from "./Redux/state/store";
+import {isAuthUserThunk} from "./thunks/authThunk/loginThunk";
+import UserService from "./restApi/UserService";
+import IUser from "./models/IUser";
+import AuthPage from "./pages/authPage/AuthPage";
+import MainPage from "./pages/MainPage";
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+
+interface IBoundProps {
+
+}
+
+interface IStateProps {
+
+}
+
+interface IDispatchProps {
+
+}
+
+type Props = IBoundProps & IStateProps & IDispatchProps
+
+const App: React.FC = (props: Props) => {
+    const [users, setUsers] = useState<IUser[]>([])
+
+    const isAuth = useSelector<Store>(state => state.auth.isAuth)
+
+    const dispatch = useDispatch()
+
+    useEffect(() => {
+        if (localStorage.getItem("token")) {
+            dispatch(isAuthUserThunk())
+        }
+    }, [])
+    const getUsers = async () => {
+        await UserService.fetchUsers()
+            .then((res) => setUsers(res.data))
+            .catch((err) => {
+                console.error(err)
+            })
+    }
+
+    return (
+        <div className="App">
+            {isAuth
+                ? <MainPage/>
+                : <AuthPage/>}
+
+        </div>
+
+    );
 }
 
 export default App;
